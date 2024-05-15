@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>MotoFX2</title>
+        <link rel="stylesheet" href="css/app.css" type="text/css" />
+
+        <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=Edge" />
+        <meta
+            name="viewport"
+            content="width=device-width initial-scale=1 maximum-scale=1 userscalable=0 minimal-ui"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="MotoFX2" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta name="full-screen" content="yes" />
+        <meta name="screen-orientation" content="portrait" />
+        <meta name="x5-fullscreen" content="true" />
+        <meta name="360-fullscreen" content="true" />
+
+        <link href="css/app.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="content"></div>
+
+        <script>
+            if (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+                    navigator.userAgent
+                )
+            ) {
+                Object.defineProperty(navigator, "userAgent", {
+                    get: function () {
+                        return "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.105 Mobile Safari/537.36";
+                    },
+                });
+            }
+        </script>
+        <script src="js/phaser.js"></script>
+        <script src="js/box2d.js"></script>
+        <script src="gamee-js.js"></script>
+        <script src="js/MotoFX2.js"></script>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+
+{
+    "frames": { 
+        "life_0": {
+            "rect": [983, 230, 27, 24],
+            "pivot": [0.5, 0.5]
+        }, 
+        "life_1": {
+            "rect": [104, 202, 27, 24],
+            "pivot": [0.5, 0.5]
+        }, 
+        "multiBar": {
+            "rect": [104, 242, 117, 12],
+            "pivot": [0.5, 0.5]
+        }, 
+        "multiBarBg": {
+            "rect": [104, 186, 117, 12],
+            "pivot": [0.5, 0.5]
+        }, 
+        "statusBar": {
+            "rect": [2, 11, 512, 72],
+            "pivot": [0.5, 0.5]
+        }, 
+        "tutorial/hand": {
+            "rect": [2, 87, 98, 167],
+            "pivot": [0.5, 0.5]
+        }, 
+        "tutorial/line": {
+            "rect": [518, 235, 461, 19],
+            "pivot": [0.5, 0.5]
+        }
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "exporter": "playcanvas",
+        "image": "atlas_0.png",
+        "size": {
+            "w": 1024,
+            "h": 256
+        },
+        "smartupdate": "$TexturePacker:SmartUpdate:6b967e3652fb9e8520008538e25dd0bc:2dc288911c4e07df560c62253b5fdda4:706f367750a4a47d7feca429705e8a03$",
+        "version": "1.0"
+    }
+}

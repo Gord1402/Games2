@@ -1,0 +1,128 @@
+body,
+html {
+    background: #000000;
+    color: #cccccc;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    height: 100%;
+    overflow: hidden;
+}
+canvas {
+    image-rendering: optimizeSpeed;
+    -webkit-interpolation-mode: nearest-neighbor;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+:-webkit-full-screen #canvas {
+    width: 100%;
+    height: 100%;
+}
+div.gm4html5_div_class {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+}
+
+.game_container {
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    /* transform: translate(-50%, 0%); */
+}
+
+.background-blur {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    );
+    filter: blur(5px);
+    z-index: -1;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #535353;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 85%;
+}
+
+.score_label {
+    position: absolute;
+    text-size-adjust: 100;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -200%);
+}
+
+.score-table {
+    margin-bottom: 20px;
+}
+
+.score-table h2 {
+    margin-top: 0;
+}
+
+.table-wrapper {
+    height: 20em;
+    width:100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+}
+
+.table-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-wrapper td {
+    display: inline-block;
+    margin: 0px;
+    width: 33%;
+    text-align: center;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+.username {
+    display: block;
+    font-size: 14px;
+    color: #fff;
+}
+
+.play-button {
+    background-color: #4caf50;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.play-button:hover {
+    background-color: #3e8e41;
+}

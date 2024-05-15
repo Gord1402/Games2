@@ -1,0 +1,56 @@
+
+{
+    "frames": { 
+        "aimDot": {
+            "rect": [202, 445, 16, 16],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/ballIcon": {
+            "rect": [202, 465, 44, 45],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarBg": {
+            "rect": [2, 100, 133, 15],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarFill": {
+            "rect": [2, 81, 133, 15],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarFlames_0": {
+            "rect": [2, 281, 146, 34],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarFlames_1": {
+            "rect": [2, 243, 146, 34],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarFlames_2": {
+            "rect": [2, 205, 146, 34],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/fireBallBarFlames_3": {
+            "rect": [2, 167, 146, 34],
+            "pivot": [0.5, 1]
+        }, 
+        "statusBar/lifeBarBg": {
+            "rect": [2, 119, 144, 44],
+            "pivot": [0.5, 1]
+        }, 
+        "tutorial/hand": {
+            "rect": [2, 319, 196, 191],
+            "pivot": [0.5, 1]
+        }
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "exporter": "playcanvas",
+        "image": "atlasUI.png",
+        "size": {
+            "w": 256,
+            "h": 512
+        },
+        "smartupdate": "$TexturePacker:SmartUpdate:a9f8da099f12191e3a087c678343850f:cbaf464dc9444a8a3b415df65da81f66:62036e2533182018491da6a9207f43ce$",
+        "version": "1.0"
+    }
+}

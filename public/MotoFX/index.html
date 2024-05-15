@@ -1,0 +1,31 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link href="../styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="background-blur">
+            <div class="game_container">
+                <iframe src="MotoFX.html" width="100%" height="100%" frameborder="0"></iframe>
+                <h1 class="score_label">0</h1>
+            </div>
+        </div>
+
+        <div class="overlay">
+            <div class="score-table">
+                <h2>Leaderboard</h2>
+                <div class="table-wrapper">
+                    <table id="leader_board_table"></table>
+                </div>
+            </div>
+            <button class="play-button" onclick="panel_start()">Play</button>
+        </div>
+
+        <script>const game_id = "motofx";</script>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="../gamee_emulator.js"></script>
+    </body>
+</html>
