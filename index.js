@@ -3,6 +3,33 @@ const fs = require("fs");
 const app = express();
 const http = require("https");
 
+const winston = require('winston');
+
+const logFormatter = winston.format.printf((info) => {
+    let { timestamp, level, stack, message } = info;
+    message = stack || message;
+    return `${timestamp} ${level}: ${message}`;
+  });
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.simple(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with importance level of `error` or less to `error.log`
+    // - Write all logs with importance level of `info` or less to `combined.log`
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+    new winston.transports.Console({
+        format: winston.format.combine(winston.format.colorize(),
+                winston.format.simple(), winston.format.timestamp(), logFormatter),
+      }),
+  ],
+});
+
+
 var base64Stream = require("base64Stream");
 
 const server = http.createServer(
@@ -84,13 +111,13 @@ app.get("/profile/icon/:user_id", async (req, res) => {
 
 io.on("connection", async (socket) => {
     socket.on("rick", () => {
-        console.log("Someone rickrolled!");
+        logger.info("Someone rickrolled!");
     })
     socket.on("error", (event, source, lineno, colno, error) => {
-        console.log("CLIENT ERROR:",new Date() ,event, source, lineno, colno, error)
+        logger.error("CLIENT ERROR:",new Date() ,event, source, lineno, colno, error)
     })
     socket.once("user_data", (user_id, inline_message_id, game_id) => {
-        console.log("User data");
+        logger.info("User data");
 
         let current_score = 0;
 
@@ -220,7 +247,7 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(5786, () => {
-    console.log("listening on *:5786");
+    logger.info("listening on *:5786");
 });
 
 // Bot side
@@ -240,7 +267,7 @@ function makeid(length) {
     return result;
 }
 
-telegram_bot.on("polling_error", console.log);
+telegram_bot.on("polling_error", logger.error);
 
 // telegram_bot.on("text", async (msg) => {
 //     if (msg.text == "/start") {
@@ -253,7 +280,7 @@ telegram_bot.on("polling_error", console.log);
 //   });
 
 telegram_bot.on("callback_query", (callbackQuery) => {
-    console.log(callbackQuery);
+    logger.debug(callbackQuery);
     if (callbackQuery.game_short_name) {
         let query = user
             .insert({
@@ -281,7 +308,7 @@ telegram_bot.on("callback_query", (callbackQuery) => {
 });
 
 telegram_bot.on("inline_query", (inlineQuery) => {
-    console.log(inlineQuery);
+    logger.debug(inlineQuery);
     let result = [];
     if (inlineQuery.query.length > 0) {
         for (const [key, value] of Object.entries(games_list)) {
@@ -302,9 +329,9 @@ telegram_bot.on("inline_query", (inlineQuery) => {
 });
 
 process.on("uncaughtException", (err) => {
-    console.log(err);
+    logger.error(err);
 });
 
 process.on("unhandledRejection", (err) => {
-    console.log(err);
+    logger.error(err);
 });
