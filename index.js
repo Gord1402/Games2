@@ -85,6 +85,7 @@ const games_list = {
     keepitup: ["KeepItUp/", "Keep It Up"],
     hoopshot: ["HoopShot/", "Hoop Shot"],
     globorun: ["GloboRun/", "Globo Run"],
+    chess: ["Chess/", "Chess"],
 };
 const token = "7066760884:AAGLqZDsgMIbDx0ANfJr1wGI586V8wxNJw8";
 const telegram_bot = new TelegramBot(token, { polling: true });
