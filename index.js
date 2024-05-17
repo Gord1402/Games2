@@ -3,32 +3,35 @@ const fs = require("fs");
 const app = express();
 const http = require("https");
 
-const winston = require('winston');
+const winston = require("winston");
 
 const logFormatter = winston.format.printf((info) => {
     let { timestamp, level, stack, message } = info;
     message = stack || message;
     return `${timestamp} ${level}: ${message}`;
-  });
-
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.simple(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    //
-    // - Write all logs with importance level of `error` or less to `error.log`
-    // - Write all logs with importance level of `info` or less to `combined.log`
-    //
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-    new winston.transports.Console({
-        format: winston.format.combine(winston.format.colorize(),
-                winston.format.simple(), winston.format.timestamp(), logFormatter),
-      }),
-  ],
 });
 
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.simple(),
+    defaultMeta: { service: "user-service" },
+    transports: [
+        //
+        // - Write all logs with importance level of `error` or less to `error.log`
+        // - Write all logs with importance level of `info` or less to `combined.log`
+        //
+        new winston.transports.File({ filename: "error.log", level: "error" }),
+        new winston.transports.File({ filename: "combined.log" }),
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.simple(),
+                winston.format.timestamp(),
+                logFormatter
+            ),
+        }),
+    ],
+});
 
 var base64Stream = require("base64Stream");
 
@@ -44,6 +47,42 @@ const io = new Server(server);
 
 const TelegramBot = require("node-telegram-bot-api");
 const ns = require("@stdlib/string-base-distances");
+
+const stockfish = require("stockfish");
+const engine = stockfish();
+
+let stockfish_requied = [];
+let stockfish_in_work = false;
+let current_stockfish_callback;
+let current_stockfish_end_type;
+
+function stockfish_work() {
+    if (stockfish_requied.length) {
+        stockfish_in_work = true;
+        let [fen, command, callback, end_type] = stockfish_requied.pop();
+        engine.postMessage("ucinewgame");
+        engine.postMessage("position fen " + fen);
+        engine.postMessage(command);
+
+        current_stockfish_callback = callback;
+        current_stockfish_end_type = end_type;
+    } else {
+        stockfish_in_work = false;
+    }
+}
+
+engine.onmessage = function (msg) {
+    console.log(msg);
+    if (!current_stockfish_end_type) return;
+    if (!typeof (msg == "string")) return;
+    try {
+        if (!msg.match(current_stockfish_end_type)) return;
+    } catch {
+        return;
+    }
+    if (current_stockfish_callback) current_stockfish_callback(msg);
+    stockfish_work();
+};
 
 let sql = require("sql");
 
@@ -88,8 +127,7 @@ const games_list = {
     chess: ["Chess/", "Chess"],
     speedwriter: ["SpeedWriter/", "Speed Writer"],
 };
-require('dotenv').config()
-
+require("dotenv").config();
 
 const token = process.env.TOKEN;
 const telegram_bot = new TelegramBot(token, { polling: true });
@@ -117,10 +155,45 @@ app.get("/profile/icon/:user_id", async (req, res) => {
 io.on("connection", async (socket) => {
     socket.on("rick", () => {
         logger.info("Someone rickrolled!");
-    })
+    });
     socket.on("error", (event, source, lineno, colno, error) => {
-        logger.error("CLIENT ERROR:",new Date() ,event, source, lineno, colno, error)
-    })
+        logger.error(
+            "CLIENT ERROR:",
+            new Date(),
+            event,
+            source,
+            lineno,
+            colno,
+            error
+        );
+    });
+
+    socket.on("stockfish_bestmove", (fen) => {
+        stockfish_requied.push([
+            fen,
+            "go depth 13",
+            (msg) => {
+                socket.emit("stockfish_answer", msg.split(" "));
+            },
+            "bestmove",
+        ]);
+
+        if (!stockfish_in_work) stockfish_work();
+    });
+
+    socket.on("stockfish_eval", (fen) => {
+        stockfish_requied.push([
+            fen,
+            "eval",
+            (msg) => {
+                socket.emit("stockfish_answer", msg.split(" "));
+            },
+            "Total evaluation:",
+        ]);
+
+        if (!stockfish_in_work) stockfish_work();
+    });
+
     socket.once("user_data", (user_id, inline_message_id, game_id) => {
         logger.info("User data");
 
@@ -130,10 +203,32 @@ io.on("connection", async (socket) => {
             current_score = score;
         });
 
-        socket.on("update_high_score", () => {
+        socket.on("update_high_score", async () => {
             try {
-                telegram_bot.setGameScore(user_id, current_score, {
+                let high_score = 0;
+                let scores = await telegram_bot.getGameHighScores(user_id, {
                     inline_message_id: inline_message_id,
+                });
+
+                for (let score of scores) {
+                    if (score.user.id == user_id) {
+                        high_score = score.score;
+                        break;
+                    }
+                }
+                if (high_score < current_score) {
+                    telegram_bot.setGameScore(user_id, current_score, {
+                        inline_message_id: inline_message_id,
+                    });
+                }
+            } catch {}
+        });
+
+        socket.on("clear_high_score", () => {
+            try {
+                telegram_bot.setGameScore(user_id, 0, {
+                    inline_message_id: inline_message_id,
+                    force: true,
                 });
             } catch {}
         });
@@ -300,15 +395,17 @@ telegram_bot.on("callback_query", (callbackQuery) => {
 
         db.run(query.text, (params = query.values), function (err) {});
 
-        telegram_bot.answerCallbackQuery(callbackQuery.id, {
-            url:
-                domain +
-                games_list[callbackQuery.game_short_name][0] +
-                "?user_id=" +
-                callbackQuery.from.id +
-                "&inline_message_id=" +
-                callbackQuery.inline_message_id,
-        });
+        try {
+            telegram_bot.answerCallbackQuery(callbackQuery.id, {
+                url:
+                    domain +
+                    games_list[callbackQuery.game_short_name][0] +
+                    "?user_id=" +
+                    callbackQuery.from.id +
+                    "&inline_message_id=" +
+                    callbackQuery.inline_message_id,
+            });
+        } catch {}
     }
 });
 
@@ -334,6 +431,10 @@ telegram_bot.on("inline_query", (inlineQuery) => {
 });
 
 process.on("uncaughtException", (err) => {
+    logger.error(err);
+});
+
+process.on("uncaughtError", (err) => {
     logger.error(err);
 });
 

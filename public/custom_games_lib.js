@@ -131,7 +131,15 @@ window.addEventListener("message", function (ev) {
             game_container.classList.add("background-blur");
             panel.hidden = false;
             break;
-        
+        case "subscribe":
+            socket.once(ev.data.to, function (...args){
+                iframe.contentWindow.postMessage({type:ev.data.to, data: args});
+            });
+            break;
+        case "socket":
+            socket.emit(...ev.data.params);
+            break;
+    
         default:
             break;
     }
