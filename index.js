@@ -88,7 +88,10 @@ const games_list = {
     chess: ["Chess/", "Chess"],
     speedwriter: ["SpeedWriter/", "Speed Writer"],
 };
-const token = "7066760884:AAGLqZDsgMIbDx0ANfJr1wGI586V8wxNJw8";
+require('dotenv').config()
+
+
+const token = process.env.TOKEN;
 const telegram_bot = new TelegramBot(token, { polling: true });
 
 app.use(express.static(__dirname + "/public"));
