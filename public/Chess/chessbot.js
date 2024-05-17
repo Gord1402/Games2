@@ -39,7 +39,7 @@ function minimax(position, depth, alpha, beta, maximizing_player) {
     } else {
         // find move with worst possible score (for maximizer)
         let minEval = +Infinity;
-        let possibleMoves = position.moves();
+        let possibleMoves = shuffle(position.moves());
         for (let i = 0; i < possibleMoves.length; i++) {
             position.move(possibleMoves[i]);
             let [childBestMove, childEval] = minimax(

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Typing Test</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+            }
+
+            #typing-area {
+                width: 80%;
+                margin: 40px auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                color: aliceblue;
+            }
+
+            #input-field {
+                width: 100%;
+                height: 200px;
+                padding: 10px;
+                font-size: 18px;
+                border: 1px solid #ccc;
+            }
+
+            #quote {
+                font-size: 18px;
+                font-style: italic;
+                margin-bottom: 10px;
+            }
+
+            #timer,
+            #wpm,
+            #accuracy {
+                margin-top: 10px;
+                font-size: 18px;
+                color: #666;
+            }
+
+            #quote-display {
+                margin-top: 20px;
+            }
+
+            .correct {
+                color: green;
+            }
+
+            .incorrect {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Typing Test</h1>
+        <div id="typing-area">
+            <p id="quote"></p>
+            <textarea id="input-field" placeholder="Start typing..."></textarea>
+            <p id="timer">Time: 0 seconds</p>
+            <p id="wpm">Words per minute: 0</p>
+            <p id="accuracy">Accuracy: 0%</p>
+            <div id="quote-display"></div>
+        </div>
+
+        <script src="https://cdn.webrtc-experiment.com/Translator.js"> </script>
+        <script src="index.js"></script>
+    </body>
+</html>

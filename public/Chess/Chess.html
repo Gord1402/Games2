@@ -29,10 +29,15 @@
     </style>
 </head>
 <body>
-    <div style="width: 90%;position: fixed;left: 50%;top:50%;transform: translate(-50%,-50%);">
+    <div id="game_place" style="height: 80%;aspect-ratio: 1 / 1;position: fixed;left: 50%;top:50%;transform: translate(-50%,-50%);">
         <div id="board1" style="width: 100%"></div>
         <button class="draw-button" onclick="draw()" style="position: fixed;left: 50%;transform: translate(-50%,0%);">Ничья</button>
     </div>
+    <script>
+        if (innerWidth < innerHeight){
+            document.getElementById("game_place").style = "width: 80%;aspect-ratio: 1 / 1;position: fixed;left: 50%;top:50%;transform: translate(-50%,-50%);"
+        }
+    </script>
     <script src="js/chessboard-1.0.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stockfish@14/stockfish.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.12.1/chess.min.js" integrity="sha512-rIescAjPgXHz3WaxrSjaOl5iZfvBVIehYe+EF+d+DAdFNgV10QBT8d5APBjcGFKES0iVUYjBilvpck7gOe7CLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
