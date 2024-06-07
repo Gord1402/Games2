@@ -33,12 +33,21 @@ const logger = winston.createLogger({
     ],
 });
 
+logger.info.bind(logger)
+
 var base64Stream = require("base64Stream");
+
+require("dotenv").config();
+
+const token = process.env.TOKEN;
+
+const port = process.env.PORT;
+const cert_path = process.env.CERT;
 
 const server = http.createServer(
     {
-        key: fs.readFileSync("C:/Certbot/live/gr1042.ddns.net/privkey.pem"),
-        cert: fs.readFileSync("C:/Certbot/live/gr1042.ddns.net/fullchain.pem"),
+        key: fs.readFileSync(cert_path + "privkey.pem"),
+        cert: fs.readFileSync(cert_path + + "fullchain.pem"),
     },
     app
 );
@@ -115,7 +124,7 @@ db.run(game_states.create().ifNotExists().toQuery().text);
 
 //SunshineSolitaire
 
-const domain = "https://gr1042.ddns.net:5786/";
+const domain = "https://gr1042.ddns.net:" + port + "/";
 
 const games_list = {
     motofx: ["MotoFX/", "Moto FX"],
@@ -127,9 +136,6 @@ const games_list = {
     chess: ["Chess/", "Chess"],
     speedwriter: ["SpeedWriter/", "Speed Writer"],
 };
-require("dotenv").config();
-
-const token = process.env.TOKEN;
 const telegram_bot = new TelegramBot(token, { polling: true });
 
 app.use(express.static(__dirname + "/public"));
@@ -346,8 +352,8 @@ io.on("connection", async (socket) => {
     });
 });
 
-server.listen(5786, () => {
-    logger.info("listening on *:5786");
+server.listen(port, () => {
+    logger.info("listening on *:" + port);
 });
 
 // Bot side
