@@ -33,7 +33,10 @@ const logger = winston.createLogger({
     ],
 });
 
-logger.info.bind(logger)
+const logHelper = {
+    log: logger.info.bind(logger),
+    error: logger.error.bind(logger)
+};
 
 var base64Stream = require("base64Stream");
 
@@ -47,7 +50,7 @@ const cert_path = process.env.CERT;
 const server = http.createServer(
     {
         key: fs.readFileSync(cert_path + "privkey.pem"),
-        cert: fs.readFileSync(cert_path + + "fullchain.pem"),
+        cert: fs.readFileSync(cert_path + "fullchain.pem"),
     },
     app
 );
@@ -160,10 +163,10 @@ app.get("/profile/icon/:user_id", async (req, res) => {
 
 io.on("connection", async (socket) => {
     socket.on("rick", () => {
-        logger.info("Someone rickrolled!");
+        logHelper.info("Someone rickrolled!");
     });
     socket.on("error", (event, source, lineno, colno, error) => {
-        logger.error(
+        logHelper.error(
             "CLIENT ERROR:",
             new Date(),
             event,
@@ -201,7 +204,7 @@ io.on("connection", async (socket) => {
     });
 
     socket.once("user_data", (user_id, inline_message_id, game_id) => {
-        logger.info("User data");
+        logHelper.info("User data");
 
         let current_score = 0;
 
@@ -353,7 +356,7 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(port, () => {
-    logger.info("listening on *:" + port);
+    logHelper.info("listening on *:" + port);
 });
 
 // Bot side
@@ -373,7 +376,7 @@ function makeid(length) {
     return result;
 }
 
-telegram_bot.on("polling_error", logger.error);
+telegram_bot.on("polling_error", logHelper.error);
 
 // telegram_bot.on("text", async (msg) => {
 //     if (msg.text == "/start") {
@@ -386,7 +389,7 @@ telegram_bot.on("polling_error", logger.error);
 //   });
 
 telegram_bot.on("callback_query", (callbackQuery) => {
-    logger.debug(callbackQuery);
+    logHelper.debug(callbackQuery);
     if (callbackQuery.game_short_name) {
         let query = user
             .insert({
@@ -416,7 +419,7 @@ telegram_bot.on("callback_query", (callbackQuery) => {
 });
 
 telegram_bot.on("inline_query", (inlineQuery) => {
-    logger.debug(inlineQuery);
+    logHelper.debug(inlineQuery);
     let result = [];
     if (inlineQuery.query.length > 0) {
         for (const [key, value] of Object.entries(games_list)) {
@@ -437,13 +440,13 @@ telegram_bot.on("inline_query", (inlineQuery) => {
 });
 
 process.on("uncaughtException", (err) => {
-    logger.error(err);
+    logHelper.error(err);
 });
 
 process.on("uncaughtError", (err) => {
-    logger.error(err);
+    logHelper.error(err);
 });
 
 process.on("unhandledRejection", (err) => {
-    logger.error(err);
+    logHelper.error(err);
 });
